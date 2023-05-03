@@ -1,8 +1,13 @@
 package com.zaga.enity.patient;
 
+import io.quarkus.hibernate.orm.panache.PanacheEntityBase;
+import jakarta.persistence.Embedded;
+import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+import jakarta.persistence.JoinColumn;
+import jakarta.persistence.ManyToOne;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -12,13 +17,19 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @NoArgsConstructor
 @Builder
-public class DiagnosisRecords {
+@Entity
+public class DiagnosisRecords extends PanacheEntityBase {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     public Long id;
 
+    @ManyToOne
+    @JoinColumn(name = "patient_id")
+    private PatientDetails patient;
     public String date;
     public String type;
     public String notes;
-    public Medications medication;
+    @Embedded
+    public Medications medications;
+
 }
