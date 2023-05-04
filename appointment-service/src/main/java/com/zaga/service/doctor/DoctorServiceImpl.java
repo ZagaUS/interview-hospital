@@ -55,4 +55,9 @@ public class DoctorServiceImpl implements DoctorService {
         repo.persist(doctor);
     }
 
+    @Override
+    public List<DoctorShedule> listDoctorSpeciality(String speciality) {
+        return repo.getDoctorSheduleListbySpeciality(speciality);
+    }
+
 }

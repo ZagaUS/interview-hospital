@@ -12,7 +12,7 @@ import jakarta.ws.rs.Path;
 import jakarta.ws.rs.PathParam;
 import jakarta.ws.rs.core.Response;
 
-@Path("/patientservice")
+@Path("/zaga/hospital/patientservice")
 public class PatientServicerResource {
 
     @Inject
@@ -26,9 +26,9 @@ public class PatientServicerResource {
     }
 
     @POST
-    @Path("/createMedicalRecord")
-    public Response createMedicalRecord(MedicalRecord record) {
-        service.createMedicalRecords(record);
+    @Path("/createMedicalRecord/{patientId}")
+    public Response createMedicalRecord(@PathParam("patientId") Long patientId, MedicalRecord record) {
+        service.createMedicalRecords(patientId, record);
         return Response.ok(record).build();
     }
 

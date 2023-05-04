@@ -1,14 +1,16 @@
 package com.zaga.service.patient;
 
+import java.util.List;
+
 import com.zaga.enity.patient.DiagnosisRecords;
 import com.zaga.enity.patient.LabResults;
 import com.zaga.enity.patient.MedicalRecord;
 
 public interface PatientService {
 
-    void createMedicalRecords(MedicalRecord medicalRecord);
+    void createMedicalRecords(Long patientId, MedicalRecord medicalRecord);
 
-    MedicalRecord getMedicalRecordbyProjectId(Long id);
+    MedicalRecord getMedicalRecordbyPatientId(Long id);
 
     MedicalRecord getMedicalRecordbyMedicalRecordId(Long id);
 

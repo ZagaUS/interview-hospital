@@ -1,5 +1,8 @@
 package com.zaga.enity.patient;
 
+import java.util.List;
+
+import io.quarkus.hibernate.orm.panache.PanacheEntity;
 import io.quarkus.hibernate.orm.panache.PanacheEntityBase;
 import jakarta.persistence.Embedded;
 import jakarta.persistence.Entity;
@@ -19,17 +22,18 @@ import lombok.NoArgsConstructor;
 @Builder
 @Entity
 public class DiagnosisRecords extends PanacheEntityBase {
+
+    // @ManyToOne
+    // @JoinColumn(name = "patient_id")
+    // private PatientDetails patient;
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     public Long id;
-
-    @ManyToOne
-    @JoinColumn(name = "patient_id")
-    private PatientDetails patient;
     public String date;
     public String type;
     public String notes;
     @Embedded
-    public Medications medications;
+    public List<Medications> medications;
 
 }

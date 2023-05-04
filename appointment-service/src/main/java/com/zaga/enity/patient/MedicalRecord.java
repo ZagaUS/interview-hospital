@@ -2,8 +2,10 @@ package com.zaga.enity.patient;
 
 import java.util.List;
 
+import io.quarkus.hibernate.orm.panache.PanacheEntity;
 import io.quarkus.hibernate.orm.panache.PanacheEntityBase;
 import jakarta.persistence.CascadeType;
+import jakarta.persistence.Embedded;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
@@ -21,15 +23,15 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @Builder
 @Entity
-public class MedicalRecord extends PanacheEntityBase {
+public class MedicalRecord extends PanacheEntity {
 
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    public Long id;
+    // @Id
+    // @GeneratedValue(strategy = GenerationType.IDENTITY)
+    // public Long id;
 
-    @OneToOne(cascade = CascadeType.ALL)
-    @JoinColumn(name = "patient_id", referencedColumnName = "id")
-    public PatientDetails patient;
+    // @OneToOne(cascade = CascadeType.ALL)
+    // @JoinColumn(name = "patient_id", referencedColumnName = "id")
+    // public PatientDetails patient;
 
     @OneToMany(cascade = CascadeType.ALL)
     @JoinColumn(name = "labResult_id", referencedColumnName = "id")

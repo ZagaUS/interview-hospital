@@ -16,14 +16,6 @@ public class AppointmentResource {
     Appointmentservice service;
 
     @POST
-    @Path("/appointment")
-    @Transactional
-    public void create(Appointment appointment) {
-        Appointment s = Appointment.builder().build();
-        Appointment.persist(s);
-    }
-
-    @POST
     @Path("/bookAppointment")
     @Transactional
     public Response book(Appointment appointment) {

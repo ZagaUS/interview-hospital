@@ -5,10 +5,14 @@ import java.util.List;
 import com.zaga.enity.patient.DiagnosisRecords;
 import com.zaga.enity.patient.LabResults;
 import com.zaga.enity.patient.MedicalRecord;
+import com.zaga.enity.patient.PatientDetails;
+import com.zaga.kafka.producer.PharmacyEvent;
 import com.zaga.repository.MedicalRecordRepository;
+import com.zaga.repository.PatientRepository;
 
 import jakarta.enterprise.context.ApplicationScoped;
 import jakarta.inject.Inject;
+import jakarta.transaction.Transactional;
 
 @ApplicationScoped
 public class PatientServiceImpl implements PatientService {
@@ -16,45 +20,87 @@ public class PatientServiceImpl implements PatientService {
     @Inject
     MedicalRecordRepository repo;
 
-    @Override
-    public void createMedicalRecords(MedicalRecord medicalRecord) {
+    @Inject
+    PatientRepository prepo;
 
-        repo.persist(medicalRecord);
+    @Override
+    public void createMedicalRecords(Long patientId, MedicalRecord medicalRecord) {
+        PatientDetails pd = prepo.findById(patientId);
+
+        MedicalRecord medicalRecorddata = pd.getMedicalRecord();
+        if (medicalRecorddata == null) {
+            pd.setMedicalRecord(medicalRecord);
+            System.out.println(pd);
+            pd.persist();
+        }
+        // repo.persist(medicalRecord);
 
     }
 
     @Override
-    public MedicalRecord getMedicalRecordbyProjectId(Long id) {
+    public MedicalRecord getMedicalRecordbyPatientId(Long id) {
 
         return repo.findbyProjectId(id);
     }
 
     @Override
     public MedicalRecord getMedicalRecordbyMedicalRecordId(Long id) {
-        return repo.findById(id);
+
+        PatientDetails pd = prepo.findById(id);
+        return pd.getMedicalRecord();
     }
 
     @Override
+    @Transactional
     public void updateLabResultsInMedicalRecord(Long id, LabResults labResults) {
+
+        PatientDetails pd = prepo.findById(id);
+
         // get medical records by id
-        MedicalRecord medicalRecord = getMedicalRecordbyMedicalRecordId(id);
+        MedicalRecord medicalRecord = pd.getMedicalRecord();
         // get labresult list
         List<LabResults> labResultList = medicalRecord.getLab_results();
+
+        System.out.println("-------labresultList---" + labResultList);
         // add new lab results
         labResultList.add(labResults);
         // persist the MedicalRecord
-        medicalRecord.persist();
+
+        medicalRecord.setLab_results(labResultList);
+        MedicalRecord.persist(medicalRecord);
+        pd.setMedicalRecord(medicalRecord);
+        // persist the patient records
+        PatientDetails.persist(pd);
+
+        pd.persist();
+
     }
 
     @Override
+    @Transactional
     public void updateDiagnoseRecordInMedicalRecord(Long id, DiagnosisRecords diagnosisRecords) {
+        // Patient details using patient id
+        PatientDetails pd = prepo.findById(id);
+
+        System.out.println("---query--" + pd);
         // get medical records by id
-        MedicalRecord medicalRecord = getMedicalRecordbyMedicalRecordId(id);
+        MedicalRecord medicalRecord = pd.getMedicalRecord();
         // get Diagnose list
         List<DiagnosisRecords> diagnoseList = medicalRecord.getDiagnosis_records();
         // add new diagnose
+        System.out.println(diagnoseList);
         diagnoseList.add(diagnosisRecords);
+        System.out.println(diagnoseList);
         // persist the MedicalRecord
-        medicalRecord.persist();
+        medicalRecord.setDiagnosis_records(diagnoseList);
+        pd.setMedicalRecord(medicalRecord);
+        MedicalRecord.persist(diagnoseList);
+        System.out.println(pd);
+        // if medication is present generate event
+        PatientDetails.persist(pd);
+        // pharmacy event
+        PharmacyEvent event = PharmacyEvent.builder().address(pd.getAddress()).name(pd.getName())
+                .phone(pd.getPatientPhone()).medications(diagnosisRecords.getMedications()).build();
+
     }
 }

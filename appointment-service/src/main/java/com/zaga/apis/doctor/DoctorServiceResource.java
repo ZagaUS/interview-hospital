@@ -1,5 +1,7 @@
 package com.zaga.apis.doctor;
 
+import java.util.List;
+
 import com.zaga.enity.doctor.DoctorShedule;
 import com.zaga.enity.doctor.Schedule;
 import com.zaga.repository.ScheduleRepository;
@@ -11,9 +13,10 @@ import jakarta.ws.rs.GET;
 import jakarta.ws.rs.POST;
 import jakarta.ws.rs.Path;
 import jakarta.ws.rs.PathParam;
+import jakarta.ws.rs.QueryParam;
 import jakarta.ws.rs.core.Response;
 
-@Path("/zaga/hospital")
+@Path("/zaga/hospital/doctor")
 public class DoctorServiceResource {
 
     @Inject
@@ -32,8 +35,9 @@ public class DoctorServiceResource {
     @POST
     @Path("/doctor")
     @Transactional
-    public void createDoctor(DoctorShedule doctor) {
+    public Response createDoctor(DoctorShedule doctor) {
         service.createDoctor(doctor);
+        return Response.status(Response.Status.CREATED).entity(doctor).build();
     }
 
     @POST
@@ -48,6 +52,15 @@ public class DoctorServiceResource {
     @Transactional
     public Response getDoctorDetailsbyid(@PathParam("id") Long id) {
         DoctorShedule result = service.getDoctorById(id);
+        System.out.println(result);
+        return Response.ok(result).build();
+    }
+
+    @GET
+    @Path("/filterBySpeciality")
+    @Transactional
+    public Response getDoctorDetailsbySpeciality(@QueryParam("speciality") String speciality) {
+        List<DoctorShedule> result = service.listDoctorSpeciality(speciality);
         System.out.println(result);
         return Response.ok(result).build();
     }

@@ -28,6 +28,12 @@
     </dependencies>
   </dependencyManagement>
   <dependencies>
+  <dependency>
+    <groupId>com.twilio.sdk</groupId>
+    <artifactId>twilio</artifactId>
+    <version>8.17.0</version>
+</dependency>
+
     <dependency>
       <groupId>io.quarkus</groupId>
       <artifactId>quarkus-resteasy-reactive-jackson</artifactId>
