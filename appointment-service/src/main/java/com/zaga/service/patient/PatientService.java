@@ -5,6 +5,7 @@ import java.util.List;
 import com.zaga.enity.patient.DiagnosisRecords;
 import com.zaga.enity.patient.LabResults;
 import com.zaga.enity.patient.MedicalRecord;
+import com.zaga.kafka.producer.PharmacyEvent;
 
 public interface PatientService {
 
@@ -16,5 +17,5 @@ public interface PatientService {
 
     void updateLabResultsInMedicalRecord(Long id, LabResults labResults);
 
-    void updateDiagnoseRecordInMedicalRecord(Long id, DiagnosisRecords diagnosisRecords);
+    PharmacyEvent updateDiagnoseRecordInMedicalRecord(Long id, DiagnosisRecords diagnosisRecords);
 }

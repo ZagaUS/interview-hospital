@@ -4,15 +4,22 @@ import java.time.LocalTime;
 import java.util.List;
 import java.util.stream.Collectors;
 
+import org.eclipse.microprofile.reactive.messaging.Channel;
+import org.eclipse.microprofile.reactive.messaging.Emitter;
+
 import com.zaga.enity.appointment.Appointment;
 import com.zaga.enity.doctor.DoctorShedule;
 import com.zaga.enity.doctor.Schedule;
+import com.zaga.enity.patient.PatientDetails;
+import com.zaga.kafka.producer.MessageEvent;
 import com.zaga.repository.AppontmentRepository;
 import com.zaga.repository.DoctorRepository;
+import com.zaga.repository.PatientRepository;
 import com.zaga.service.doctor.DoctorService;
 
 import jakarta.enterprise.context.ApplicationScoped;
 import jakarta.inject.Inject;
+import jakarta.transaction.Transactional;
 import jakarta.ws.rs.WebApplicationException;
 
 @ApplicationScoped
@@ -24,15 +31,28 @@ public class AppointmentServiceImpl implements Appointmentservice {
     @Inject
     AppontmentRepository repo;
 
+    @Inject
+    PatientRepository prepo;
+
+    @Inject
+    @Channel("notification-out")
+    Emitter<MessageEvent> emitter;
+
     @Override
+    @Transactional
     public void bookAppointment(Appointment appointment) {
         // checkavailability method
         if (checkAvailabiltyAndTimeslot(appointment)) {
             System.out.println("---------Checked the availability successful-------");
             repo.persist(appointment);
+            PatientDetails pd = prepo.findById(appointment.patient_id);
+            MessageEvent event = MessageEvent.builder().phoneNo(pd.getPatientPhone()).source("Appointment")
+                    .status("Booked").build();
+            emitter.send(event);
+
         } else {
             System.out.println("Error");
-            // Throw exception
+
         }
 
     }

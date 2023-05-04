@@ -2,6 +2,10 @@ package com.zaga.service.patient;
 
 import java.util.List;
 
+import org.eclipse.microprofile.reactive.messaging.Channel;
+import org.eclipse.microprofile.reactive.messaging.Emitter;
+import org.eclipse.microprofile.reactive.messaging.Outgoing;
+
 import com.zaga.enity.patient.DiagnosisRecords;
 import com.zaga.enity.patient.LabResults;
 import com.zaga.enity.patient.MedicalRecord;
@@ -10,7 +14,9 @@ import com.zaga.kafka.producer.PharmacyEvent;
 import com.zaga.repository.MedicalRecordRepository;
 import com.zaga.repository.PatientRepository;
 
+import io.smallrye.reactive.messaging.annotations.Blocking;
 import jakarta.enterprise.context.ApplicationScoped;
+import jakarta.enterprise.context.control.ActivateRequestContext;
 import jakarta.inject.Inject;
 import jakarta.transaction.Transactional;
 
@@ -22,6 +28,10 @@ public class PatientServiceImpl implements PatientService {
 
     @Inject
     PatientRepository prepo;
+
+    @Inject
+    @Channel("pharmacy-out")
+    Emitter<PharmacyEvent> emitter;
 
     @Override
     public void createMedicalRecords(Long patientId, MedicalRecord medicalRecord) {
@@ -78,7 +88,7 @@ public class PatientServiceImpl implements PatientService {
 
     @Override
     @Transactional
-    public void updateDiagnoseRecordInMedicalRecord(Long id, DiagnosisRecords diagnosisRecords) {
+    public PharmacyEvent updateDiagnoseRecordInMedicalRecord(Long id, DiagnosisRecords diagnosisRecords) {
         // Patient details using patient id
         PatientDetails pd = prepo.findById(id);
 
@@ -101,6 +111,7 @@ public class PatientServiceImpl implements PatientService {
         // pharmacy event
         PharmacyEvent event = PharmacyEvent.builder().address(pd.getAddress()).name(pd.getName())
                 .phone(pd.getPatientPhone()).medications(diagnosisRecords.getMedications()).build();
-
+        emitter.send(event);
+        return event;
     }
 }

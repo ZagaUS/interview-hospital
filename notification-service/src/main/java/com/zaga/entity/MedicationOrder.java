@@ -2,9 +2,6 @@ package com.zaga.entity;
 
 import java.util.List;
 
-import io.quarkus.hibernate.orm.panache.PanacheEntity;
-import jakarta.persistence.Embedded;
-import jakarta.persistence.Entity;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -14,13 +11,11 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @NoArgsConstructor
 @Builder
-@Entity
-public class MedicationOrder extends PanacheEntity {
-
+public class MedicationOrder {
     private String name;
-    @Embedded
+
     private Address address;
     private String phone;
-    @Embedded
+
     private List<MedicationDTO> medications;
 }
