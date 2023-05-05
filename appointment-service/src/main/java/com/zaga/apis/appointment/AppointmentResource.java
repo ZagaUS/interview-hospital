@@ -17,7 +17,6 @@ public class AppointmentResource {
 
     @POST
     @Path("/bookAppointment")
-    @Transactional
     public Response book(Appointment appointment) {
 
         service.bookAppointment(appointment);

@@ -1,6 +1,7 @@
 package com.zaga.service.appointment;
 
 import com.zaga.enity.appointment.Appointment;
+import com.zaga.kafka.producer.MessageEvent;
 
 public interface Appointmentservice {
 
@@ -11,5 +12,7 @@ public interface Appointmentservice {
     void cancelAppointment(Appointment appointment);
 
     Boolean checkAvailabiltyAndTimeslot(Appointment appointment);
+
+    void sendEvent(MessageEvent event);
 
 }

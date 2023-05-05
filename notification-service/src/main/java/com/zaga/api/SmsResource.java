@@ -9,6 +9,7 @@ import com.zaga.entity.MedicationOrder;
 import com.zaga.kafka.consumer.MessageEvent;
 import com.zaga.service.MessageBuilderService;
 
+import io.smallrye.reactive.messaging.annotations.Blocking;
 import jakarta.inject.Inject;
 import jakarta.ws.rs.POST;
 import jakarta.ws.rs.Path;
@@ -32,11 +33,17 @@ public class SmsResource {
         Twilio.init(ACCOUNT_SID, AUTH_TOKEN);
         String toNumber = smsMessage.getTo();
         String message = smsMessage.getMessage();
-        Message.creator(new PhoneNumber(toNumber), new PhoneNumber(TWILIO_NUMBER), message).create();
+        try {
+            Message.creator(new PhoneNumber(toNumber), new PhoneNumber(TWILIO_NUMBER), message).create();
+        } catch (Exception e) {
+            e.getStackTrace();
+        }
+
         return Response.ok("Message sent successfully!").build();
     }
 
     @Incoming("notification-in")
+    @Blocking
     public void sendsms(MessageEvent event) {
         System.out.println(event);
         // if message source is pharmacy

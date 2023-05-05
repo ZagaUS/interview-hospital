@@ -14,13 +14,14 @@ services:
       quarkus.datasource.username: quarkus
       quarkus.datasource.password: quarkus
       quarkus.datasource.jdbc.url: jdbc:postgresql://database/quarkus
+      kafka.bootstrap.servers: host.docker.internal:29092
   notification:
     image: quarkus/notification-service
     build:
       context: ./notification-service
       dockerfile: src/main/docker/Dockerfile.jvm
     ports:
-      - "7080:8080"
+      - "7080:8091"
     networks:
       - front-tier
       - back-tier
@@ -28,13 +29,14 @@ services:
       quarkus.datasource.username: quarkus
       quarkus.datasource.password: quarkus
       quarkus.datasource.jdbc.url: jdbc:postgresql://database/quarkus
+      kafka.bootstrap.servers: host.docker.internal:29092
   pharmacy:
     image: quarkus/pharmacy-service
     build:
       context: ./pharmacy-service
       dockerfile: src/main/docker/Dockerfile.jvm
     ports:
-      - "8090:8080"
+      - "8090:8090"
     networks:
       - front-tier
       - back-tier
@@ -42,6 +44,7 @@ services:
       quarkus.datasource.username: quarkus
       quarkus.datasource.password: quarkus
       quarkus.datasource.jdbc.url: jdbc:postgresql://database/quarkus
+      kafka.bootstrap.servers: host.docker.internal:29092
   database:
     image: postgres
     ports:

@@ -18,6 +18,7 @@ import com.zaga.repository.PatientRepository;
 import com.zaga.service.doctor.DoctorService;
 
 import jakarta.enterprise.context.ApplicationScoped;
+import jakarta.enterprise.context.control.ActivateRequestContext;
 import jakarta.inject.Inject;
 import jakarta.transaction.Transactional;
 import jakarta.ws.rs.WebApplicationException;
@@ -39,16 +40,32 @@ public class AppointmentServiceImpl implements Appointmentservice {
     Emitter<MessageEvent> emitter;
 
     @Override
-    @Transactional
     public void bookAppointment(Appointment appointment) {
         // checkavailability method
         if (checkAvailabiltyAndTimeslot(appointment)) {
             System.out.println("---------Checked the availability successful-------");
-            repo.persist(appointment);
+
             PatientDetails pd = prepo.findById(appointment.patient_id);
             MessageEvent event = MessageEvent.builder().phoneNo(pd.getPatientPhone()).source("Appointment")
                     .status("Booked").build();
-            emitter.send(event);
+            // emitter.send(event);
+
+            try {
+                System.out.println("----sending event----");
+                sendEvent(event);
+
+            } catch (Exception e) {
+                System.out.println("----event error-----");
+                System.out.println(e.getStackTrace());
+            }
+            try {
+                System.out.println("-----Persisting----");
+                createAppointment(appointment);
+
+            } catch (Exception er) {
+                System.out.println("-----sql error---");
+                System.out.println(er.getStackTrace());
+            }
 
         } else {
             System.out.println("Error");
@@ -58,8 +75,14 @@ public class AppointmentServiceImpl implements Appointmentservice {
     }
 
     @Override
+    @Transactional
     public void createAppointment(Appointment appointment) {
+        repo.persist(appointment);
+    }
 
+    @Override
+    public void sendEvent(MessageEvent event) {
+        emitter.send(event);
     }
 
     @Override

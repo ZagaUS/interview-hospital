@@ -1,5 +1,7 @@
 package com.zaga.enity.patient;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+
 import io.quarkus.hibernate.orm.panache.PanacheEntity;
 import io.quarkus.hibernate.orm.panache.PanacheEntityBase;
 import jakarta.persistence.Column;

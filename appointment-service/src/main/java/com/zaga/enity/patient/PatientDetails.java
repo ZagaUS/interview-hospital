@@ -2,6 +2,7 @@ package com.zaga.enity.patient;
 
 import java.util.List;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.zaga.enity.appointment.Appointment;
 
 import io.quarkus.hibernate.orm.panache.PanacheEntity;

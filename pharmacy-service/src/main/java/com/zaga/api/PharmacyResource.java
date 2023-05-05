@@ -63,7 +63,7 @@ public class PharmacyResource {
     @Incoming("pharmacy-in")
     @Blocking
     public void eventConsumerFromAppointmentService(MedicationOrder medicationOrder) {
-
+        System.out.println(medicationOrder);
         List<MedicationDTO> medications = medicationOrder.getMedications();
         List<Boolean> stockCheckResults = medications.stream()
                 .map(medication -> {

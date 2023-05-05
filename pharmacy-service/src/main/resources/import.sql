@@ -19,3 +19,6 @@ VALUES (2,'Ibuprofen', '200mg', 750);
 
 INSERT INTO medications (id,medication_name, dosage, stock) 
 VALUES (3,'Acetaminophen', '500mg', 1000);
+
+INSERT INTO medications (id,medication_name, dosage, stock) 
+VALUES (50,'string', 'string', 500);

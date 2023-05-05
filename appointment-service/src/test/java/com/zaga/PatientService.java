@@ -6,6 +6,8 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.TestInstance;
 import org.junit.jupiter.api.TestMethodOrder;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.JsonMappingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.zaga.enity.patient.MedicalRecord;
 import com.zaga.enity.patient.PatientDetails;
@@ -27,9 +29,21 @@ public class PatientService {
 
     @Test
     @Order(1)
-    public void enrollPatient() {
+    public void enrollPatient() throws JsonMappingException, JsonProcessingException {
 
-        String json = "{\"name\":\"Raghul\",\"email\":\"string\",\"patientPhone\":\"string\",\"address\":{\"houseNo\":\"string\",\"street\":\"string\",\"city\":\"string\",\"state\":\"string\",\"zipCode\":\"string\"},\"gender\":\"string\",\"date_of_birth\":\"string\",\"emergencyContact\":{\"emergencyContactName\":\"string\",\"relationship\":\"string\",\"phone\":\"string\"},\"medicalRecord\":{\"lab_results\":null,\"diagnosis_records\":null}}";
+        // String json =
+        //
+        // "{\"name\":\"Raghul\",\"email\":\"string\",\"patientPhone\":\"string\",\"address\":{\"houseNo\":\"string\",\"street\":\"string\",\"city\":\"string\",\"state\":\"string\",\"zipCode\":\"string\"},\"gender\":\"string\",\"date_of_birth\":\"string\",\"emergencyContact\":{\"emergencyContactName\":\"string\",\"relationship\":\"string\",\"phone\":\"string\"},\"medicalRecord\":{\"lab_results\":null,\"diagnosis_records\":null}}";
+
+        // String json =
+        // //
+        // "{\"name\":\"string\",\"email\":\"string\",\"patientPhone\":\"+91989447385\",\"address\":{\"houseNo\":\"string\",\"street\":\"string\",\"city\":\"string\",\"state\":\"string\",\"zipCode\":\"string\"},\"gender\":\"string\",\"date_of_birth\":\"string\",\"emergencyContact\":{\"emergencyContactName\":\"string\",\"relationship\":\"string\",\"phone\":\"string\"},\"medicalRecord\":null}";
+
+        String json = "{\"name\":\"Raghul\",\"email\":\"jeyaraghul@gmail.com\",\"patientPhone\":\"+91989447288\",\"address\":{\"houseNo\":\"90/1\",\"street\":\"apparstreet\",\"city\":\"singapore\",\"state\":\"string\",\"zipCode\":\"string\"},\"gender\":\"string\",\"date_of_birth\":\"string\",\"emergencyContact\":{\"emergencyContactName\":\"string\",\"relationship\":\"string\",\"phone\":\"string\"},\"medicalRecord\":{\"lab_results\":[{\"labId\":\"string\",\"test\":\"string\",\"date\":\"string\"}],\"diagnosis_records\":[{\"date\":\"string\",\"type\":\"string\",\"notes\":\"string\",\"medications\":[{\"medication_name\":\"string\",\"dosage\":\"string\",\"medication_frequency\":\"string\",\"medication_start_date\":\"string\",\"medication_end_date\":\"string\"}]}]}}";
+
+        // PatientDetails patientDetails = mapper.readValue(json, PatientDetails.class);
+        // System.out.println("--------------" + patientDetails);
+
         PatientDetails response = RestAssured.given()
                 .contentType(ContentType.JSON)
                 .accept(ContentType.JSON)
@@ -92,7 +106,7 @@ public class PatientService {
     @Order(4)
     public void updateDiagnsisRecordMedicalRecord() {
 
-        String json = "{\"date\":\"string\",\"type\":\"string\",\"notes\":\"string\",\"medications\":[{\"medication_name\":\"string\",\"dosage\":\"string\",\"medication_frequency\":\"string\",\"medication_start_date\":\"string\",\"medication_end_date\":\"string\"}]}";
+        String json = "{\"date\":\"string\",\"type\":\"string\",\"notes\":\"string\",\"medications\":[{\"medication_name\":\"Aspirin\",\"dosage\":\"100mg\",\"medication_frequency\":\"string\",\"medication_start_date\":\"string\",\"medication_end_date\":\"string\"}]}";
         RestAssured.given()
                 .contentType(ContentType.JSON)
                 .accept(ContentType.JSON)

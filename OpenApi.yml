@@ -1,0 +1,360 @@
+---
+openapi: 3.0.3
+info:
+  title: appointment-service API
+  version: 1.0.0-SNAPSHOT
+tags:
+  - name: Patient Enrollment
+    description: "Api for enrolling patient  "
+  - name: "Patient Management Services "
+    description: "Api for Managing patient details  "
+paths:
+  /zaga/hospital/bookAppointment:
+    post:
+      tags:
+        - Appointment Resource
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/Appointment"
+      responses:
+        "200":
+          description: OK
+  /zaga/hospital/doctor/doctor:
+    post:
+      tags:
+        - "Patient Management Services "
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/DoctorShedule"
+      responses:
+        "200":
+          description: Create new Doctorschedule to tables
+  /zaga/hospital/doctor/filterBySpeciality:
+    get:
+      tags:
+        - "Patient Management Services "
+      parameters:
+        - name: speciality
+          in: query
+          schema:
+            type: string
+      responses:
+        "200":
+          description: Get Lab Doctor Results By Doctor Specialization
+  /zaga/hospital/doctor/getById/{id}:
+    get:
+      tags:
+        - "Patient Management Services "
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            format: int64
+            type: integer
+      responses:
+        "200":
+          description: Get Lab Doctor Results By Doctor Id
+  /zaga/hospital/doctor/schedule:
+    post:
+      tags:
+        - "Patient Management Services "
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/Schedule"
+      responses:
+        "204":
+          description: Create new Schedule to tables
+  /zaga/hospital/doctor/update/{id}:
+    post:
+      tags:
+        - "Patient Management Services "
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            format: int64
+            type: integer
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/Schedule"
+      responses:
+        "204":
+          description:
+            Update schedule Record that is adding new records to Doctorschedule
+            records by Doctor Id
+  /zaga/hospital/patientEnrollment:
+    post:
+      tags:
+        - Patient Enrollment
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/PatientDetails"
+      responses:
+        "200":
+          description: Created New Pateintdetail
+  /zaga/hospital/patientservice/createMedicalRecord/{patientId}:
+    post:
+      tags:
+        - "Patient Management Services "
+      parameters:
+        - name: patientId
+          in: path
+          required: true
+          schema:
+            format: int64
+            type: integer
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/MedicalRecord"
+      responses:
+        "200":
+          description: Create New Medical Record by Patient Id
+  /zaga/hospital/patientservice/getMedicalRecord/{id}:
+    get:
+      tags:
+        - "Patient Management Services "
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            format: int64
+            type: integer
+      responses:
+        "200":
+          description: Get Medical Record by Patient Id
+  /zaga/hospital/patientservice/updateDianoseRecord/{id}:
+    post:
+      tags:
+        - "Patient Management Services "
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            format: int64
+            type: integer
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/DiagnosisRecords"
+      responses:
+        "200":
+          description:
+            Update Lab Diagnosis Record that is adding new records to Medical
+            records by Patient Id
+  /zaga/hospital/patientservice/updateLabresults/{id}:
+    post:
+      tags:
+        - "Patient Management Services "
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            format: int64
+            type: integer
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/LabResults"
+      responses:
+        "200":
+          description:
+            Update Lab Results Record that is adding new records to Medical
+            records by Patient Id
+components:
+  schemas:
+    Address:
+      type: object
+      properties:
+        houseNo:
+          type: string
+        street:
+          type: string
+        city:
+          type: string
+        state:
+          type: string
+        zipCode:
+          type: string
+    Appointment:
+      type: object
+      properties:
+        id:
+          format: int64
+          type: integer
+        startTime:
+          $ref: "#/components/schemas/LocalTime"
+        endTime:
+          $ref: "#/components/schemas/LocalTime"
+        date:
+          $ref: "#/components/schemas/LocalDate"
+        doctor_id:
+          format: int64
+          type: integer
+        patient_id:
+          format: int64
+          type: integer
+        timeSlot:
+          type: string
+        time_slot_id:
+          format: int32
+          type: integer
+        appointment_status:
+          type: string
+        appointment_type:
+          type: string
+        appointment_reason:
+          type: string
+    DiagnosisRecords:
+      type: object
+      properties:
+        id:
+          format: int64
+          type: integer
+        date:
+          type: string
+        type:
+          type: string
+        notes:
+          type: string
+        medications:
+          type: array
+          items:
+            $ref: "#/components/schemas/Medications"
+    DoctorShedule:
+      type: object
+      properties:
+        id:
+          format: int64
+          type: integer
+        doctor_name:
+          type: string
+        specialty:
+          type: string
+        email:
+          type: string
+        phone:
+          type: string
+        appointments:
+          type: array
+          items:
+            $ref: "#/components/schemas/Appointment"
+        schedules:
+          type: array
+          items:
+            $ref: "#/components/schemas/Schedule"
+    EmergencyContact:
+      type: object
+      properties:
+        emergencyContactName:
+          type: string
+        relationship:
+          type: string
+        phone:
+          type: string
+    LabResults:
+      type: object
+      properties:
+        id:
+          format: int64
+          type: integer
+        labId:
+          type: string
+        test:
+          type: string
+        date:
+          type: string
+    LocalDate:
+      format: date
+      type: string
+      example: 2022-03-10
+    LocalTime:
+      format: local-time
+      type: string
+      externalDocs:
+        description: As defined by 'partial-time' in RFC3339
+        url: https://xml2rfc.ietf.org/public/rfc/html/rfc3339.html#anchor14
+      example: 13:45.30.123456789
+    MedicalRecord:
+      type: object
+      properties:
+        id:
+          format: int64
+          type: integer
+        lab_results:
+          type: array
+          items:
+            $ref: "#/components/schemas/LabResults"
+        diagnosis_records:
+          type: array
+          items:
+            $ref: "#/components/schemas/DiagnosisRecords"
+    Medications:
+      type: object
+      properties:
+        medication_name:
+          type: string
+        dosage:
+          type: string
+        medication_frequency:
+          type: string
+        medication_start_date:
+          type: string
+        medication_end_date:
+          type: string
+    PatientDetails:
+      type: object
+      properties:
+        id:
+          format: int64
+          type: integer
+        name:
+          type: string
+        email:
+          type: string
+        patientPhone:
+          type: string
+        address:
+          $ref: "#/components/schemas/Address"
+        gender:
+          type: string
+        date_of_birth:
+          type: string
+        emergencyContact:
+          $ref: "#/components/schemas/EmergencyContact"
+        medicalRecord:
+          $ref: "#/components/schemas/MedicalRecord"
+    Schedule:
+      type: object
+      properties:
+        persistent:
+          type: boolean
+        date:
+          $ref: "#/components/schemas/LocalDate"
+        start_Time:
+          $ref: "#/components/schemas/LocalTime"
+        end_Time:
+          $ref: "#/components/schemas/LocalTime"
+  securitySchemes:
+    SecurityScheme:
+      type: http
+      description: Authentication
+      scheme: basic

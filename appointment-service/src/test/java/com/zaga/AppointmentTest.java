@@ -14,6 +14,7 @@ import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.zaga.enity.appointment.Appointment;
 import com.zaga.enity.doctor.DoctorShedule;
+import com.zaga.enity.patient.MedicalRecord;
 import com.zaga.enity.patient.PatientDetails;
 
 import io.quarkus.test.junit.QuarkusTest;
@@ -30,6 +31,7 @@ public class AppointmentTest {
     private static ObjectMapper mapper;
     private PatientDetails pateDetailsResponse;
     private DoctorShedule doctorSheduleResponse;
+    private MedicalRecord medicalRecordResponse;
 
     // enroll pateint
 
@@ -37,16 +39,20 @@ public class AppointmentTest {
     @Order(1)
     public void enrollPatient() {
 
-        String json = "{\"name\":\"string\",\"email\":\"string\",\"patientPhone\":\"string\",\"address\":{\"houseNo\":\"string\",\"street\":\"string\",\"city\":\"string\",\"state\":\"string\",\"zipCode\":\"string\"},\"gender\":\"string\",\"date_of_birth\":\"string\",\"emergencyContact\":{\"emergencyContactName\":\"string\",\"relationship\":\"string\",\"phone\":\"string\"},\"medicalRecord\":null}";
+        // String json =
+        // "{\"name\":\"string\",\"email\":\"string\",\"patientPhone\":\"+91989447385\",\"address\":{\"houseNo\":\"string\",\"street\":\"string\",\"city\":\"string\",\"state\":\"string\",\"zipCode\":\"string\"},\"gender\":\"string\",\"date_of_birth\":\"string\",\"emergencyContact\":{\"emergencyContactName\":\"string\",\"relationship\":\"string\",\"phone\":\"string\"},\"medicalRecord\":null}";
+        // String json =
+        // "{\"name\":\"Raghul\",\"email\":\"string\",\"patientPhone\":\"+91989447385\",\"address\":{\"houseNo\":\"string\",\"street\":\"string\",\"city\":\"string\",\"state\":\"string\",\"zipCode\":\"string\"},\"gender\":\"string\",\"date_of_birth\":\"string\",\"emergencyContact\":{\"emergencyContactName\":\"string\",\"relationship\":\"string\",\"phone\":\"string\"},\"medicalRecord\":{\"lab_results\":null,\"diagnosis_records\":null}}";
 
-        PatientDetails response = RestAssured.given()
+        String json = "{\"name\":\"Raghul\",\"email\":\"jeyaraghul@gmail.com\",\"patientPhone\":\"+91989447288\",\"address\":{\"houseNo\":\"90/1\",\"street\":\"apparstreet\",\"city\":\"singapore\",\"state\":\"string\",\"zipCode\":\"string\"},\"gender\":\"string\",\"date_of_birth\":\"string\",\"emergencyContact\":{\"emergencyContactName\":\"string\",\"relationship\":\"string\",\"phone\":\"string\"},\"medicalRecord\":{\"lab_results\":[{\"labId\":\"string\",\"test\":\"string\",\"date\":\"string\"}],\"diagnosis_records\":[{\"date\":\"string\",\"type\":\"string\",\"notes\":\"string\",\"medications\":[{\"medication_name\":\"string\",\"dosage\":\"string\",\"medication_frequency\":\"string\",\"medication_start_date\":\"string\",\"medication_end_date\":\"string\"}]}]}}";
+        PatientDetails response1 = RestAssured.given()
                 .contentType(ContentType.JSON)
                 .accept(ContentType.JSON)
                 .body(json)
                 .when().post("/zaga/hospital/patientEnrollment").then().statusCode(200).extract()
                 .as(PatientDetails.class);
 
-        pateDetailsResponse = response;
+        pateDetailsResponse = response1;
 
         System.out.println(pateDetailsResponse);
 
@@ -107,6 +113,7 @@ public class AppointmentTest {
                 .date(LocalDate.of(2023, 05, 06)).doctor_id(doctorSheduleResponse.id).patient_id(pateDetailsResponse.id)
                 .timeSlot("").time_slot_id(4).appointment_status("Reserved").appointment_type("follow-up")
                 .appointment_reason("Consulting").build();
+        System.out.println("--------appointment--------" + appointment);
         Appointment response = RestAssured.given()
                 .contentType(ContentType.JSON)
                 .accept(ContentType.JSON)
@@ -116,7 +123,48 @@ public class AppointmentTest {
 
     }
 
-    // Not available check while booking
-    // Timeslot Limit full
+    // @Test
+    // @Order(6)
+    // public void getMedicalRecordbyPatientId() {
 
+    // MedicalRecord response = RestAssured.given()
+    // .contentType(ContentType.JSON)
+    // .accept(ContentType.JSON).pathParam("id", pateDetailsResponse.id)
+    // .when().get("/zaga/hospital/patientservice/getMedicalRecord/{id}").then().statusCode(200).extract()
+    // .as(MedicalRecord.class);
+
+    // medicalRecordResponse = response;
+
+    // // Not available check while booking
+    // // Timeslot Limit full
+
+    // }
+
+    // @Test
+    // @Order(7)
+    // public void updateLabResultMedicalRecord() {
+
+    // String json =
+    // "{\"labId\":\"string\",\"test\":\"string\",\"date\":\"string\"}";
+    // RestAssured.given()
+    // .contentType(ContentType.JSON)
+    // .accept(ContentType.JSON)
+    // .body(json).pathParam("id", pateDetailsResponse.id)
+    // .when().post("/zaga/hospital/patientservice/updateLabresults/{id}").then().statusCode(200);
+
+    // }
+
+    // @Test
+    // @Order(8)
+    // public void updateDiagnsisRecordMedicalRecord() {
+
+    // String json =
+    // "{\"date\":\"string\",\"type\":\"string\",\"notes\":\"string\",\"medications\":[{\"medication_name\":\"Aspirin\",\"dosage\":\"100mg\",\"medication_frequency\":\"string\",\"medication_start_date\":\"string\",\"medication_end_date\":\"string\"}]}";
+    // RestAssured.given()
+    // .contentType(ContentType.JSON)
+    // .accept(ContentType.JSON)
+    // .body(json).pathParam("id", pateDetailsResponse.id)
+    // .when().post("/zaga/hospital/patientservice/updateDianoseRecord/{id}").then().statusCode(200);
+
+    // }
 }
